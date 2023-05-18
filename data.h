@@ -1,15 +1,12 @@
 
 // data structure of the data
+typedef struct pixelBlock {
+    unsigned int pixels[3][3];
+} PixelBlock;
 
-typedef struct data {
-    unsigned int **packedData;
-    unsigned int *packedDataBlock;
-    unsigned int **unpackedData;
-    unsigned int *unpackedDataBlock;
+typedef struct imageData {
+    unsigned int **data;
+    unsigned int *dataBlock;
     int width;
     int height;
-    int packedHeight;
-    int packedWidth;
-    char format[2];
-    char *fileName;
-} Data;
+} ImageData;

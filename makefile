@@ -9,7 +9,7 @@ CC     = gcc
 # -g enables the use of GDB
 CFLAGS = -std=c99 -Wall -Werror -g
 # this is your list of executables which you want to compile with all
-EXE = ebcUnblock ebcBlock
+EXE = ebcUnblock ebcBlock ebcR32 ebcU32 ebcR128 ebcU128
 #EXE = ebfEcho ebfComp ebf2ebu ebuEcho ebuComp ebu2ebf ebu2ebc ebcEcho ebcComp ebc2ebu
 
 # we put 'all' as the first command as this will be run if you just enter 'make'
@@ -35,13 +35,40 @@ clean:
 # but as you refactor and add more .c and .h files
 # these recipes will become more complex.
 
-ebcUnblock.o: data.h inputData.h outputFile.h
+outputFile.o: data.h
 
-ebcBlock.o: data.h inputData.h outputFile.h
+pack-unpack.o: data.h
 
+memoryUtils.o: data.h
 
-ebcUnblock: ebcUnblock.o inputData.o outputFile.o pack-unpack.o
+inputData.o: data.h memoryUtils.h pack-unpack.h reportError.h
+
+ebcUnblock.o: data.h memoryUtils.h
+
+ebcBlock.o: data.h memoryUtils.h inputData.h
+
+ebcR32.o: data.h memoryUtils.h pack-unpack.h inputData.h
+
+ebcU32.o: data.h memoryUtils.h pack-unpack.h inputData.h
+
+ebcR128.o: data.h memoryUtils.h pack-unpack.h inputData.h
+
+ebcU128.o: data.h memoryUtils.h pack-unpack.h inputData.h
+
+ebcUnblock: ebcUnblock.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o
 	$(CC) $^ -o $@
 
-ebcBlock: ebcBlock.o inputData.o outputFile.o pack-unpack.o
+ebcBlock: ebcBlock.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o
+	$(CC) $^ -o $@
+
+ebcR32: ebcR32.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o
+	$(CC) $^ -o $@
+
+ebcU32: ebcU32.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o
+	$(CC) $^ -o $@
+
+ebcR128: ebcR128.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o
+	$(CC) $^ -o $@
+
+ebcU128: ebcU128.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o
 	$(CC) $^ -o $@

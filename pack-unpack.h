@@ -1,10 +1,22 @@
 
 unsigned int getBit(unsigned int pixel, int bit);
 
-void ebcBlock_pack(Data *data);
+int getClosestParadigmBlockIndex(PixelBlock *paradigmBlocks, unsigned int **image, int row, int column, int numberOfParadigmBlocks, int heightLimit, int widthLimit);
 
-void ebcBlock_unpack(Data *data);
+ImageData *replaceImageWithParadigmBlockIndex(ImageData *unpackedImage, int numberOfParadigmBlocks, PixelBlock *pixelBlocks);
 
-void packData(Data *data, unsigned int *buffer, int *bit_in_buffer, int row, int column);
+ImageData *getParadigmBlockImage(int numberOfParadigmBlocks, const PixelBlock *pixelBlocks);
 
-int unpackData(Data *data, unsigned int *buffer, int *bit_in_buffer, int row, int column, int *end, int *tmpHeight, int *tmpWidth);
+PixelBlock *getParadigmBlocks(const ImageData *unpackedImage, int numberOfParadigmBlocks);
+
+ImageData *replaceIndexWithParadigmBlock(ImageData *unpackedImageData, ImageData *unpackedRandomImage, PixelBlock *pixelBlocks);
+
+int numberOf3x3Blocks(int height, int width);
+
+ImageData *ebcBlock_Pack(const ImageData *unpackedImage);
+
+void ebcBlock_Unpack(ImageData *unpackedImage, const ImageData *unpackedBlockImage);
+
+ImageData *packData(const ImageData *unpackedData, int heightLimit, int widthLimit, int packSize);
+
+ImageData *unpackImage(const ImageData *unpackedImage, const ImageData *packedImage, int packSize);

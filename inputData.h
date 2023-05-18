@@ -1,12 +1,7 @@
 
-void freeData(Data *data);
+ImageData *getImageDataFromEC(const char *fileName, int *errorCode);
 
-int checkDataTooMuch(Data *data, FILE *inputFile);
+int ebcBlockGetImageData(const char *fileName, ImageData *unpackedImage, ImageData *packedBlockImage);
 
-int inputData_EU(Data *data);
-
-int inputData_EC(Data *data);
-
-int inputData_EU2EC(Data *data);
-
-int inputData_EC2EU(Data *data);
+int ebcRandomGetImageData(const char *fileName, ImageData *unpackedImageData, ImageData *packedRandomImage,
+                          PixelBlock **pixelBlocks, int packSize, int magicNumber);

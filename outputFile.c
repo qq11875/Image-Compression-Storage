@@ -15,59 +15,70 @@
 #define MAX_DIMENSION 262144
 #define MIN_DIMENSION 1
 
-// function to write the data to a ebu file
-int outputFile_EU(Data *data, char *fileName) {
-    // open the output file in write binary mode
+void outputImageToFile(char const *fileName, const ImageData *unpackedImage, const ImageData *packedBlockImage,
+                       char *magicNumber) {
     FILE *outputFile = fopen(fileName, "wb");
-
-    // validate that the file has been opened correctly
-    if (!outputFile) {
-        printf("ERROR: Bad File Name (%s)\n", fileName);
-        return BAD_FILE;
-    }
-
-    // write the header data in one block
-    fprintf(outputFile, "eu\n%d %d\n", data->height, data->width);
-
-    // iterate though the array and print out pixel values
-    for (int row = 0; row < data->height; row++) {
-        for (int column = 0; column < data->width; column++) {
-            fwrite(&data->unpackedData[row][column], 1, 1, outputFile);
+    fprintf(outputFile, "%s\n%d %d\n", magicNumber, unpackedImage->height, unpackedImage->width);
+    for (int row = 0, end = 0; row < unpackedImage->height && !end; row++) {
+        for (int column = 0; column < unpackedImage->width && !end; column++) {
+            if (row == packedBlockImage->height && column == packedBlockImage->width) {
+                end = 1;
+                break;
+            }
+            fwrite(&packedBlockImage->data[row][column], 1, 1, outputFile);
         }
     }
 
     fclose(outputFile);
-
-    return SUCCESS;
 }
 
-int outputFile_EC(Data *data, char *fileName) {
-    // open the output file in write binary mode
+void
+outputToFile(char *const fileName, const ImageData *unpackedImage, const ImageData *packedImage, char *magicNumber) {
     FILE *outputFile = fopen(fileName, "wb");
-
-    // validate that the file has been opened correctly
-    if (!outputFile) {
-        printf("ERROR: Bad File Name (%s)\n", fileName);
-        return BAD_FILE;
-    }
-
     // write the header data in one block
-    fprintf(outputFile, "ec\n%d %d\n", data->height, data->width);
-    // printf("row = %d, column = %d\n", data->packedHeight, data->packedWidth);
-    //  iterate though the array and print out pixel values
-    for (int row = 0; row < data->height; row++) {
-        for (int column = 0; column < data->width; column++) {
-            // if we have reached the end of the data, close the file and exit
-            if (row == data->packedHeight && column == data->packedWidth) {
-                fclose(outputFile);
-                return SUCCESS;
-            }
+    fprintf(outputFile, "%s\n%d %d\n", magicNumber, unpackedImage->height, unpackedImage->width);
 
-            fwrite(&data->packedData[row][column], 1, 1, outputFile);
+    // iterate though the array and print out pixel values
+    for (int row = 0, end = 0; row < unpackedImage->height && !end; row++) {
+        for (int column = 0; column < unpackedImage->width && !end; column++) {
+            if (row == packedImage->height && column == packedImage->width) {
+                end = 1;
+                break;
+            }
+            fwrite(&packedImage->data[row][column], 1, 1, outputFile);
         }
     }
 
     fclose(outputFile);
+}
 
-    return SUCCESS;
+void
+outputParadigmBlocksAndImageToFile(const char *fileName, const ImageData *unpackedImageData, int numberOfParadigmBlocks,
+                                   const ImageData *packedR32Image, const ImageData *packedParadigmImage,
+                                   char *magicNumber) {
+    FILE *outputFile = fopen(fileName, "wb");
+    fprintf(outputFile, "%s\n%d %d\n", magicNumber, unpackedImageData->height, unpackedImageData->width);
+
+    for (int i = 0, end = 0; i < numberOfParadigmBlocks && !end; i++) {
+        for (int j = 0; j < 9 && !end; j++) {
+            if (i == packedParadigmImage->height && j == packedParadigmImage->width) {
+                end = 1;
+                break;
+            }
+            fwrite(&packedParadigmImage->data[i][j], 1, 1, outputFile);
+        }
+    }
+    fprintf(outputFile, "\n");
+
+    for (int row = 0, end = 0; row < unpackedImageData->height && !end; row++) {
+        for (int column = 0; column < unpackedImageData->width && !end; column++) {
+            if (row == packedR32Image->height && column == packedR32Image->width) {
+                end = 1;
+                break;
+            }
+            fwrite(&packedR32Image->data[row][column], 1, 1, outputFile);
+        }
+    }
+
+    fclose(outputFile);
 }
