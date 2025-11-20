@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "pack-unpack.h": "c",
+        "memoryutils.h": "c"
+    }
+}

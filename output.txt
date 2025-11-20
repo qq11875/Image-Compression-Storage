@@ -1,0 +1,56 @@
+gcc -c -std=c99 -Wall -Werror -g ebcUnblock.c -o ebcUnblock.o
+gcc -c -std=c99 -Wall -Werror -g pack-unpack.c -o pack-unpack.o
+gcc -c -std=c99 -Wall -Werror -g memoryUtils.c -o memoryUtils.o
+gcc -c -std=c99 -Wall -Werror -g inputData.c -o inputData.o
+gcc -c -std=c99 -Wall -Werror -g outputFile.c -o outputFile.o
+gcc -c -std=c99 -Wall -Werror -g reportError.c -o reportError.o
+gcc ebcUnblock.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o -o ebcUnblock
+gcc -c -std=c99 -Wall -Werror -g ebcBlock.c -o ebcBlock.o
+gcc ebcBlock.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o -o ebcBlock
+gcc -c -std=c99 -Wall -Werror -g ebcR32.c -o ebcR32.o
+gcc ebcR32.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o -o ebcR32
+gcc -c -std=c99 -Wall -Werror -g ebcU32.c -o ebcU32.o
+gcc ebcU32.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o -o ebcU32
+gcc -c -std=c99 -Wall -Werror -g ebcR128.c -o ebcR128.o
+gcc ebcR128.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o -o ebcR128
+gcc -c -std=c99 -Wall -Werror -g ebcU128.c -o ebcU128.o
+gcc ebcU128.o pack-unpack.o memoryUtils.o inputData.o outputFile.o reportError.o -o ebcU128
+CONVERTED
+CONVERTED
+./ebcR32 sample_ebc_images/dodo.ebc tmp.ebcc 721831
+CONVERTED
+./ebcU32 tmp.ebcc tmp.ebc
+CONVERTED
+Process:         ebcU32 [17126]
+Path:            /Users/USER/Desktop/*/ebcU32
+Load Address:    0x1020e8000
+Identifier:      ebcU32
+Version:         ???
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  leaks [17125]
+
+Date/Time:       2023-05-18 21:41:31.255 +0100
+Launch Time:     2023-05-18 21:41:31.171 +0100
+OS Version:      macOS 12.6 (21G115)
+Report Version:  7
+Analysis Tool:   /usr/bin/leaks
+
+Physical footprint:         7185K
+Physical footprint (peak):  7185K
+----
+
+leaks Report Version: 3.0
+Process 17126: 220 nodes malloced for 20 KB
+Process 17126: 6 leaks for 3712 total leaked bytes.
+
+Leak: 0x15c804080  size=32  zone: DefaultMallocZone_0x102200000
+Leak: 0x15c8040a0  size=320  zone: DefaultMallocZone_0x102200000
+Leak: 0x15c8041e0  size=32  zone: DefaultMallocZone_0x102200000
+Leak: 0x15c804200  size=256  zone: DefaultMallocZone_0x102200000
+Leak: 0x15d008200  size=1536  zone: DefaultMallocZone_0x102200000
+Leak: 0x15d008800  size=1536  zone: DefaultMallocZone_0x102200000
+./ebc2ebu tmp.ebc tmp.ebu
+CONVERTED
+./ebu2ebf tmp.ebu tmp.ebf
+rm -rf *.o ebcUnblock ebcBlock ebcR32 ebcU32 ebcR128 ebcU128
